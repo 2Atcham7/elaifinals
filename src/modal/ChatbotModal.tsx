@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { X, Send } from "lucide-react";
+import { X, Send, Minimize2 } from "lucide-react"; // Add Minimize2 icon for the minimize button
 import GoogleGenerativeAI from "./GoogleGenerativeAI";
-
 
 interface Message {
   id: number;
@@ -34,7 +33,7 @@ const ChatbotModal: React.FC<ChatbotModalProps> = ({ isOpen, onClose }) => {
     setLoading(true);
 
     try {
-      const genAI = new GoogleGenerativeAI("AIzaSyC3YMwzYGLKRh-YTmrcuYBrlbf49YCG498");
+      const genAI = new GoogleGenerativeAI("YOUR_GOOGLE_API_KEY");
       const result = await genAI.generateContent(input);
 
       const botMessage: Message = {
@@ -70,15 +69,19 @@ const ChatbotModal: React.FC<ChatbotModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div
-      className={`fixed bottom-4 right-4 z-50 ${
-        isMinimized ? "h-16" : "h-[600px] w-[400px]"
-      } transition-all duration-300`}
+      className={`fixed bottom-4 right-4 z-50 ${isMinimized ? "h-16" : "h-[600px] w-[400px]"} transition-all duration-300`}
     >
       <div className="bg-gray-800 rounded-xl shadow-2xl flex flex-col h-full w-full">
         {/* Header */}
         <div className="flex justify-between items-center p-4 bg-gray-700 rounded-t-xl">
           <h2 className="text-white font-bold">AI Chatbot</h2>
           <div className="flex items-center space-x-2">
+            <button
+              onClick={toggleMinimize} // Button to toggle the minimize state
+              className="text-gray-300 hover:text-white"
+            >
+              <Minimize2 className="w-6 h-6" />
+            </button>
             <button
               onClick={onClose}
               className="text-gray-300 hover:text-white"
@@ -94,15 +97,11 @@ const ChatbotModal: React.FC<ChatbotModalProps> = ({ isOpen, onClose }) => {
             {messages.map((message) => (
               <div
                 key={message.id}
-                className={`flex ${
-                  message.sender === "user" ? "justify-end" : "justify-start"
-                }`}
+                className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}
               >
                 <div
                   className={`max-w-full p-3 rounded-xl ${
-                    message.sender === "user"
-                      ? "bg-green-600 text-white"
-                      : "bg-gray-700 text-gray-200"
+                    message.sender === "user" ? "bg-green-600 text-white" : "bg-gray-700 text-gray-200"
                   }`}
                   style={{ overflowWrap: "break-word", wordWrap: "break-word" }}
                 >
@@ -111,16 +110,16 @@ const ChatbotModal: React.FC<ChatbotModalProps> = ({ isOpen, onClose }) => {
               </div>
             ))}
             {loading && (
-  <div className="flex justify-start">
-    <div className="bg-gray-700 text-gray-200 p-3 rounded-xl">
-      <div className="typing-animation">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </div>
-  </div>
-)}
+              <div className="flex justify-start">
+                <div className="bg-gray-700 text-gray-200 p-3 rounded-xl">
+                  <div className="typing-animation">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
